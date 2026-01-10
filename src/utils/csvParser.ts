@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 import { db } from '@/db/schema';
-import type { Sentence, Lesson, GrammarPoint, UserProgress, DailyGoal, Achievement } from '@/types';
+import type { Sentence, Lesson, GrammarPoint, UserProgress, Achievement } from '@/types';
 
 // Module-level flag to prevent concurrent loads
 let isLoading = false;
@@ -52,7 +52,7 @@ export async function loadCSVData(): Promise<void> {
       grammarConnection: (row['语法接续'] || '').trim(),
       grammarExplanation: (row['语法解释'] || '').trim(),
       wordByWord: (row['逐词精解'] || '').trim(),
-      tags: (row['标签'] || '').split(',').map(t => t.trim()).filter(Boolean),
+      tags: (row['标签'] || '').split(',').map((t: string) => t.trim()).filter(Boolean),
     }));
 
     // 5. Bulk insert sentences (use bulkPut for idempotency)
