@@ -2,8 +2,19 @@ import Papa from 'papaparse';
 import { db } from '@/db/schema';
 import type { Sentence, Lesson, GrammarPoint, UserProgress, DailyGoal, Achievement } from '@/types';
 
+// Module-level flag to prevent concurrent loads
+let isLoading = false;
+
 export async function loadCSVData(): Promise<void> {
+  // Prevent concurrent loading (e.g., React StrictMode double invocation)
+  if (isLoading) {
+    console.log('Data loading already in progress, skipping...');
+    return;
+  }
+
   try {
+    isLoading = true;
+
     // 1. Check if data already exists
     const existingCount = await db.sentences.count();
     if (existingCount > 0) {
@@ -44,8 +55,8 @@ export async function loadCSVData(): Promise<void> {
       tags: (row['标签'] || '').split(',').map(t => t.trim()).filter(Boolean),
     }));
 
-    // 5. Bulk insert sentences
-    await db.sentences.bulkAdd(sentences);
+    // 5. Bulk insert sentences (use bulkPut for idempotency)
+    await db.sentences.bulkPut(sentences);
     console.log('Sentence data imported');
 
     // 6. Generate lessons and grammar points
@@ -64,6 +75,8 @@ export async function loadCSVData(): Promise<void> {
   } catch (error) {
     console.error('Data loading failed:', error);
     throw error;
+  } finally {
+    isLoading = false;
   }
 }
 
@@ -96,7 +109,7 @@ async function generateLessonsAndGrammar(sentences: Sentence[]): Promise<void> {
       completionRate: 0,
     });
   });
-  await db.lessons.bulkAdd(lessons);
+  await db.lessons.bulkPut(lessons);
 
   // Generate grammar point data
   const grammarMap = new Map<string, Sentence[]>();
@@ -120,7 +133,7 @@ async function generateLessonsAndGrammar(sentences: Sentence[]): Promise<void> {
       isLearned: false,
     });
   });
-  await db.grammarPoints.bulkAdd(grammarPoints);
+  await db.grammarPoints.bulkPut(grammarPoints);
 }
 
 async function initializeUserProgress(): Promise<void> {
@@ -135,7 +148,7 @@ async function initializeUserProgress(): Promise<void> {
     studyStreak: 0,
     lastStudyDate: new Date(),
   };
-  await db.userProgress.add(progress);
+  await db.userProgress.put(progress);
 }
 
 async function initializeAchievements(): Promise<void> {
@@ -301,5 +314,5 @@ async function initializeAchievements(): Promise<void> {
       isUnlocked: false,
     },
   ];
-  await db.achievements.bulkAdd(achievements);
+  await db.achievements.bulkPut(achievements);
 }
