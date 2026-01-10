@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { Sentence, Lesson, GrammarPoint } from '@/types';
-import { getLessonById, getSentencesByLesson, getSentencesByGrammarPoint } from '@/db/operations';
+import { getLessonById, getSentencesByGrammarPoint } from '@/db/operations';
 
 interface StudyStore {
   currentLesson: Lesson | null;
@@ -17,7 +17,7 @@ interface StudyStore {
   loadGrammarPoint: (grammarId: string) => Promise<void>;
 }
 
-export const useStudyStore = create<StudyStore>((set, get) => ({
+export const useStudyStore = create<StudyStore>((set) => ({
   currentLesson: null,
   currentGrammarPoint: null,
   currentSentence: null,

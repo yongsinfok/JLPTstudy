@@ -52,3 +52,17 @@ export function formatDuration(seconds: number): string {
     return `${secs}秒`;
   }
 }
+export function getThisWeekDates(): Date[] {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 (Sun) to 6 (Sat)
+  const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust for Monday start
+  const monday = new Date(today.setDate(diff));
+
+  const dates: Date[] = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    dates.push(date);
+  }
+  return dates;
+}

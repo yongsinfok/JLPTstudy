@@ -3,12 +3,7 @@ import { TrendingUp, Target, Clock, Award } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
 import WeeklyChart from '@/components/progress/WeeklyChart';
 import { formatDuration } from '@/utils/dateHelper';
-import { getThisWeekDates } from '@/utils/dateHelper';
 
-interface WeeklyData {
-  date: Date;
-  count: number;
-}
 
 const ProgressPage = () => {
   const { progress, getOverallProgress } = useProgress();
@@ -17,20 +12,8 @@ const ProgressPage = () => {
     grammar: number;
     sentences: number;
   }>({ lessons: 0, grammar: 0, sentences: 0 });
-  const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
-
   useEffect(() => {
     setOverallProgress(getOverallProgress());
-
-    // Generate mock weekly data for demonstration
-    // In a full implementation, this would come from actual learning records
-    const thisWeekDates = getThisWeekDates();
-    const mockData: WeeklyData[] = thisWeekDates.map(date => ({
-      date,
-      // Random data for demonstration
-      count: Math.random() > 0.5 ? Math.floor(Math.random() * 8) + 1 : 0,
-    }));
-    setWeeklyData(mockData);
   }, [progress, getOverallProgress]);
 
   // Calculate stats
@@ -239,7 +222,7 @@ const ProgressPage = () => {
       </div>
 
       {/* Weekly Chart */}
-      <WeeklyChart data={weeklyData} className="mb-8" />
+      <WeeklyChart />
 
       {/* Mastery Distribution */}
       <div className="bg-white rounded-xl p-6 border border-gray-200 mb-8">
