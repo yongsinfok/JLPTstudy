@@ -1,35 +1,50 @@
 import { create } from 'zustand';
 import type { Sentence, Lesson, GrammarPoint } from '@/types';
-import { getLessonById, getSentencesByLesson, getSentencesByGrammarPoint } from '@/db/operations';
+import {
+  getLessonById,
+  getSentencesByGrammarPoint,
+  markSentenceAsLearned,
+  markGrammarAsLearned,
+  unlockNextLesson,
+  markLessonAsCompleted,
+  calculateGrammarCompletion,
+  calculateLessonCompletion,
+} from '@/db/operations';
 
 interface StudyStore {
   currentLesson: Lesson | null;
-  currentGrammarPoint: GrammarPoint | null;
+  currentGrammar: GrammarPoint | null;
+  sentences: Sentence[];
+  currentSentenceIndex: number;
   currentSentence: Sentence | null;
-  sentenceIndex: number;
+  showFurigana: boolean;
+  showTranslation: boolean;
+  showAnalysis: boolean;
   isLoading: boolean;
-
-  setCurrentLesson: (lesson: Lesson | null) => void;
-  setCurrentGrammarPoint: (grammar: GrammarPoint | null) => void;
-  setCurrentSentence: (sentence: Sentence | null) => void;
-  setSentenceIndex: (index: number) => void;
   loadLesson: (lessonId: number) => Promise<void>;
-  loadGrammarPoint: (grammarId: string) => Promise<void>;
+  loadGrammar: (grammarId: string) => Promise<void>;
+  nextSentence: () => void;
+  prevSentence: () => void;
+  markAsLearned: (sentenceId: string) => Promise<void>;
+  toggleFurigana: () => void;
+  toggleTranslation: () => void;
+  toggleAnalysis: () => void;
+  reset: () => void;
+  goToSentence: (index: number) => void;
 }
 
 export const useStudyStore = create<StudyStore>((set, get) => ({
   currentLesson: null,
-  currentGrammarPoint: null,
+  currentGrammar: null,
+  sentences: [],
+  currentSentenceIndex: 0,
   currentSentence: null,
-  sentenceIndex: 0,
+  showFurigana: false,
+  showTranslation: false,
+  showAnalysis: false,
   isLoading: false,
 
-  setCurrentLesson: (lesson) => set({ currentLesson: lesson }),
-  setCurrentGrammarPoint: (grammar) => set({ currentGrammarPoint: grammar }),
-  setCurrentSentence: (sentence) => set({ currentSentence: sentence }),
-  setSentenceIndex: (index) => set({ sentenceIndex: index }),
-
-  loadLesson: async (lessonId) => {
+  loadLesson: async (lessonId: number) => {
     set({ isLoading: true });
     try {
       const lesson = await getLessonById(lessonId);
@@ -40,20 +55,90 @@ export const useStudyStore = create<StudyStore>((set, get) => ({
     }
   },
 
-  loadGrammarPoint: async (grammarId) => {
+  loadGrammar: async (grammarId: string) => {
     set({ isLoading: true });
     try {
-      const grammar = await getSentencesByGrammarPoint(grammarId);
-      if (grammar.length > 0) {
-        set({
-          currentSentence: grammar[0],
-          sentenceIndex: 0,
-          isLoading: false
-        });
-      }
+      const sentences = await getSentencesByGrammarPoint(grammarId);
+      set({
+        sentences,
+        currentSentenceIndex: 0,
+        currentSentence: sentences[0] || null,
+        currentGrammar: null,
+        isLoading: false,
+      });
     } catch (error) {
       console.error('Failed to load grammar point:', error);
       set({ isLoading: false });
     }
   },
+
+  nextSentence: () => {
+    const { sentences, currentSentenceIndex } = get();
+    if (currentSentenceIndex < sentences.length - 1) {
+      const newIndex = currentSentenceIndex + 1;
+      set({
+        currentSentenceIndex: newIndex,
+        currentSentence: sentences[newIndex],
+      });
+    }
+  },
+
+  prevSentence: () => {
+    const { currentSentenceIndex } = get();
+    if (currentSentenceIndex > 0) {
+      const newIndex = currentSentenceIndex - 1;
+      set({
+        currentSentenceIndex: newIndex,
+        currentSentence: get().sentences[newIndex],
+      });
+    }
+  },
+
+  goToSentence: (index: number) => {
+    const { sentences } = get();
+    if (index >= 0 && index < sentences.length) {
+      set({
+        currentSentenceIndex: index,
+        currentSentence: sentences[index],
+      });
+    }
+  },
+
+  markAsLearned: async (sentenceId: string) => {
+    try {
+      await markSentenceAsLearned(sentenceId);
+      const { currentLesson, currentGrammar } = get();
+      if (currentGrammar) {
+        const completion = await calculateGrammarCompletion(currentGrammar.id);
+        if (completion >= 100) {
+          await markGrammarAsLearned(currentGrammar.id);
+          if (currentLesson) {
+            const lessonCompletion = await calculateLessonCompletion(currentLesson.id);
+            if (lessonCompletion >= 100) {
+              await markLessonAsCompleted(currentLesson.id);
+              await unlockNextLesson(currentLesson.id);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to mark as learned:', error);
+    }
+  },
+
+  toggleFurigana: () => set(state => ({ showFurigana: !state.showFurigana })),
+  toggleTranslation: () => set(state => ({ showTranslation: !state.showTranslation })),
+  toggleAnalysis: () => set(state => ({ showAnalysis: !state.showAnalysis })),
+
+  reset: () => set({
+    currentLesson: null,
+    currentGrammar: null,
+    sentences: [],
+    currentSentenceIndex: 0,
+    currentSentence: null,
+    showFurigana: false,
+    showTranslation: false,
+    showAnalysis: false,
+    isLoading: false,
+  }),
 }));

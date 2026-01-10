@@ -97,10 +97,10 @@ export function QuizResult({
                 <div key={grammar} className="flex items-center justify-between">
                   <span className="text-gray-700">{grammar}</span>
                   <div className="flex items-center gap-2">
-                    <span className={\`text-sm font-medium \${isGood ? 'text-success' : 'text-error'}\`}>
+                    <span className={`text-sm font-medium ${isGood ? 'text-success' : 'text-error'}`}>
                       {result.correct}/{result.total}
                     </span>
-                    <span className={\`text-sm font-medium \${isGood ? 'text-success' : 'text-error'}\`}>
+                    <span className={`text-sm font-medium ${isGood ? 'text-success' : 'text-error'}`}>
                       ({percentage}%)
                     </span>
                   </div>
