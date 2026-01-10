@@ -1,6 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useStudyStore } from '@/stores/studyStore';
-import type { Sentence } from '@/types';
 import { markSentenceAsLearned } from '@/db/operations';
 
 export function useStudySession() {
