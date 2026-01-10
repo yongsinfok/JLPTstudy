@@ -33,7 +33,7 @@ interface StudyStore {
   goToSentence: (index: number) => void;
 }
 
-export const useStudyStore = create<StudyStore>((set, get) => ({
+export const useStudyStore = create<StudyStore>((set) => ({
   currentLesson: null,
   currentGrammar: null,
   sentences: [],

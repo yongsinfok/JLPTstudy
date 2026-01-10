@@ -44,12 +44,12 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   startTime: 0,
   endTime: 0,
 
-  setQuestions: (questions) => set({ 
-    questions, 
-    currentQuestionIndex: 0, 
-    answers: new Map(), 
+  setQuestions: (questions) => set({
+    questions,
+    currentQuestionIndex: 0,
+    answers: new Map(),
     userAnswers: new Map(),
-    isCompleted: false, 
+    isCompleted: false,
     score: 0,
     startTime: Date.now(),
     endTime: 0,
@@ -110,7 +110,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   getResultsByGrammar: () => {
     const { questions, userAnswers } = get();
     const results = new Map<string, GrammarResult>();
-    
+
     questions.forEach(q => {
       const grammar = q.grammarPoint;
       const existing = results.get(grammar) || { correct: 0, total: 0 };
@@ -120,7 +120,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       }
       results.set(grammar, existing);
     });
-    
+
     return results;
   },
 }));

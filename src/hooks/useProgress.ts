@@ -1,22 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { db } from '@/db/schema';
 import type { UserProgress } from '@/types';
+import { getUserProgress } from '@/db/operations';
 
 export function useProgress() {
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadProgress = async () => {
+  const loadProgress = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const data = await db.userProgress.get('user_progress');
-      setProgress(data || null);
+      const p = await getUserProgress();
+      setProgress(p || null);
     } catch (error) {
       console.error('Failed to load progress:', error);
-      setProgress(null);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const updateProgress = async (updates: Partial<UserProgress>) => {
     try {
@@ -29,7 +30,7 @@ export function useProgress() {
     }
   };
 
-  const getOverallProgress = () => {
+  const getOverallProgress = useCallback(() => {
     if (!progress) {
       return { lessons: 0, grammar: 0, sentences: 0 };
     }
@@ -38,12 +39,12 @@ export function useProgress() {
     const totalGrammar = 200;
     const totalSentences = 1000;
 
-    const lessons = (progress.completedLessons.length / totalLessons) * 100;
-    const grammar = (progress.learnedGrammar.length / totalGrammar) * 100;
-    const sentences = (progress.learnedSentences.length / totalSentences) * 100;
+    const lessons = Math.min(100, Math.round((progress.completedLessons.length / totalLessons) * 100));
+    const grammar = Math.min(100, Math.round((progress.learnedGrammar.length / totalGrammar) * 100));
+    const sentences = Math.min(100, Math.round((progress.learnedSentences.length / totalSentences) * 100));
 
     return { lessons, grammar, sentences };
-  };
+  }, [progress]);
 
   const getTodayGoal = async () => {
     try {
@@ -65,7 +66,6 @@ export function useProgress() {
         const updatedGoal = { ...existingGoal, ...updates };
         await db.dailyGoals.put(updatedGoal);
       } else {
-        // Create new goal with default targets
         const newGoal = {
           id: crypto.randomUUID(),
           date: new Date(),
@@ -85,7 +85,7 @@ export function useProgress() {
 
   useEffect(() => {
     loadProgress();
-  }, []);
+  }, [loadProgress]);
 
   return {
     progress,
